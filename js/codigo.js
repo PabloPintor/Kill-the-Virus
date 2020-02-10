@@ -1,0 +1,13 @@
+$( function() {
+    $("#puntuaciones").dialog();
+
+
+
+
+
+
+
+
+
+    
+});
