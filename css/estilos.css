@@ -1,13 +1,19 @@
 #juego{
     background-color: #999999;
-    height: 100vh;
 }
 body{
     height: 100vh;
+    background-color: #999999;
 }
 #puntuaciones{
     display: none;
 }
 #medico{
     position: absolute;
+}
+#pared{
+    background-image: url("../img/fondo/pared-patron.jpg");
+    background-repeat: repeat-x;
+    background-size: 130px;
+    height: 90px;
 }

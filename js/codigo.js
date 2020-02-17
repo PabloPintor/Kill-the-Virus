@@ -1,5 +1,6 @@
 var personaje;
 var ultimaDireccion = "";
+var estatico = false;
 
 $(function() {
     //dialogo puntuaciones
@@ -15,15 +16,32 @@ $(function() {
     });
     $(document).keyup(function(e) {
         delete keys[e.which];
-        //mueve();
+        ponerPersonajeEstatico();
     });
+
+    function ponerPersonajeEstatico() {
+        if (ultimaDireccion == "izquierda"){
+            $("#medico").attr("src", "img/personajes/estatico-izquierda.jpg");
+        }
+        else if (ultimaDireccion == "derecha"){
+            $("#medico").attr("src", "img/personajes/estatico-derecha.png");
+        }
+        else if (ultimaDireccion == "arriba"){
+            $("#medico").attr("src", "img/personajes/estatico-detras.jpg");
+        }
+        else{
+            $("#medico").attr("src", "img/personajes/estatico-delante.jpg");
+        }
+        estatico = true;
+    }
 
     //mover dependiendo de codigo tecla
     function mueve() {
         if (keys[37]) {
             if (!personaje.colisionaPorIzquierda("terreno")) {
-                if (ultimaDireccion != "izquierda"){
+                if (ultimaDireccion != "izquierda" || (estatico)){
                     $("#medico").attr("src", "img/personajes/correr-izquierda.gif");
+                    estatico = false;
                 }
                 personaje.moverIzquierda();
                 ultimaDireccion = "izquierda";
@@ -31,8 +49,9 @@ $(function() {
         }
         if (keys[38]) {
             if (!personaje.colisionaPorArriba("terreno")) {
-                if (ultimaDireccion != "arriba"){
+                if (ultimaDireccion != "arriba" || (estatico)){
                     $("#medico").attr("src", "img/personajes/correr-arriba.gif");
+                    estatico = false;
                 }
                 personaje.moverArriba();
                 ultimaDireccion = "arriba";
@@ -40,8 +59,9 @@ $(function() {
         }
         if (keys[39]) {
             if (!personaje.colisionaPorDerecha("terreno")) {
-                if (ultimaDireccion != "derecha"){
+                if (ultimaDireccion != "derecha" || (estatico)){
                     $("#medico").attr("src", "img/personajes/correr-derecha.gif");
+                    estatico = false;
                 }
                 personaje.moverDerecha();
                 ultimaDireccion = "derecha";
@@ -49,26 +69,15 @@ $(function() {
         }
         if (keys[40]) {
             if (!personaje.colisionaPorAbajo("terreno")) {
-                if (ultimaDireccion != "abajo"){
+                if (ultimaDireccion != "abajo" || (estatico)){
                     $("#medico").attr("src", "img/personajes/correr-abajo.gif");
+                    estatico = false;
                 }
                 personaje.moverAbajo();
                 ultimaDireccion = "abajo";
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 });
