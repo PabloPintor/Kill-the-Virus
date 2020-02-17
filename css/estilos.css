@@ -1,0 +1,13 @@
+#juego{
+    background-color: #999999;
+    height: 100vh;
+}
+body{
+    height: 100vh;
+}
+#puntuaciones{
+    display: none;
+}
+#medico{
+    position: absolute;
+}
