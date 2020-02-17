@@ -15,7 +15,7 @@ $(function() {
     });
     $(document).keyup(function(e) {
         delete keys[e.which];
-        mueve();
+        //mueve();
     });
 
     //mover dependiendo de codigo tecla
