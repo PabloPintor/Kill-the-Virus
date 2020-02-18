@@ -1,16 +1,18 @@
-#juego{
-    background-color: #999999;
-}
-body{
+html, body{
     height: 100vh;
     background-color: #999999;
+    margin: 0;
+    overflow: hidden;
 }
 #puntuaciones{
     display: none;
 }
 #medico{
     position: absolute;
-    top: 30px;
+    top: 50%;
+    left: 10%;
+    width: 25px;
+    height: 45px;
 }
 .paredHorizontal{
     position: absolute;
@@ -26,4 +28,12 @@ body{
     background-size: 130px;
     width: 10px;
     height: 99%;
+}
+.pilar{
+    position: absolute;
+    background-image: url("../img/fondo/pared-patron.jpg");
+    background-repeat: repeat;
+    background-size: 130px;
+    width: 50px;
+    height: 50px;
 }
