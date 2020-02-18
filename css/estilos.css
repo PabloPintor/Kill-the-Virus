@@ -10,10 +10,20 @@ body{
 }
 #medico{
     position: absolute;
+    top: 30px;
 }
-#pared{
+.paredHorizontal{
+    position: absolute;
     background-image: url("../img/fondo/pared-patron.jpg");
     background-repeat: repeat-x;
     background-size: 130px;
-    height: 90px;
+    height: 10px;
+}
+.paredVertical{
+    position: absolute;
+    background-image: url("../img/fondo/pared-patron.jpg");
+    background-repeat: repeat-y;
+    background-size: 130px;
+    width: 10px;
+    height: 99%;
 }

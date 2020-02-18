@@ -16,7 +16,6 @@ $(function() {
     });
     $(document).keyup(function(e) {
         delete keys[e.which];
-        console.log("keyup");
         ponerPersonajeEstatico();
     });
 
