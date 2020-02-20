@@ -1,8 +1,13 @@
 var personaje;
 var ultimaDireccion = "";
 var estatico = false;
+var nivelActual = 0;
+var enemigos = [];
 
 $(function() {
+
+    setInterval(comprobarNivel,3000);
+
     //dialogo puntuaciones
     //$("#puntuaciones").dialog();
 
@@ -12,7 +17,8 @@ $(function() {
 
     $(document).keydown(function(e) {
         keys[e.which] = true;
-        mueve();
+        //mueve();
+
     });
     $(document).keyup(function(e) {
         delete keys[e.which];
@@ -77,7 +83,35 @@ $(function() {
                 ultimaDireccion = "abajo";
             }
         }
+        setTimeout(mueve, 50);
     }
+
+    mueve();
+
+    function comprobarNivel() {
+        console.log("a");
+        if (numeroEnemigos() == 0){
+            nivelActual++;
+            añadirEnemigos();
+        }
+    }
+
+    //añade numero enemigos dependiendo del nivel actual
+    function añadirEnemigos() {
+        if (nivelActual < 10){
+            for (let i = 0; i < nivelActual*2; i++) {
+                //$('<img>', {src: 'img/personajes/virus.gif',class: 'enemigo'}).appendTo("#enemigos");
+                enemigos.push(new Personaje($('<img>', {src: 'img/personajes/virus.gif',class: 'enemigo'}).appendTo("#enemigos")));
+            }
+        }
+    }
+
+    //devuelve el numero de enemigos que hay
+    function numeroEnemigos(){
+        let n = $('.enemigo').length;
+        return n;
+    }
+
 
 
 });
