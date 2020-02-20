@@ -82,11 +82,11 @@ class Personaje { // Cualquier personaje que se mueva. Puede ser personaje princ
 class Terreno { // Cualquier capa inmovil
     constructor(capa) {
         this.capa = capa;
-        this.izquierda = capa.offset().left;
-        this.arriba = capa.offset().top;
-        this.altura = capa.outerHeight(true);
-        this.anchura = capa.outerWidth(true);
-        this.derecha = this.izquierda + this.anchura;
-        this.abajo = this.arriba + this.altura;
+        this.izquierda = parseInt(capa.offset().left);
+        this.arriba = parseInt(capa.offset().top);
+        this.altura = parseInt(capa.outerHeight(true));
+        this.anchura = parseInt(capa.outerWidth(true));
+        this.derecha = parseInt(this.izquierda + this.anchura);
+        this.abajo = parseInt(this.arriba + this.altura);
     }
 }

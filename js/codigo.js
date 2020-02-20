@@ -1,12 +1,14 @@
 var personaje;
 var ultimaDireccion = "";
 var estatico = false;
-var nivelActual = 0;
+var nivelActual = 8;
 var enemigos = [];
 
 $(function() {
 
-    setInterval(comprobarNivel,3000);
+    //intervalos
+    setInterval(comprobarEstado,2000);
+    setInterval(moverEnemigos, 50)
 
     //dialogo puntuaciones
     //$("#puntuaciones").dialog();
@@ -18,7 +20,6 @@ $(function() {
     $(document).keydown(function(e) {
         keys[e.which] = true;
         //mueve();
-
     });
     $(document).keyup(function(e) {
         delete keys[e.which];
@@ -88,12 +89,23 @@ $(function() {
 
     mueve();
 
-    function comprobarNivel() {
-        console.log("a");
+    function comprobarEstado() {
         if (numeroEnemigos() == 0){
             nivelActual++;
             añadirEnemigos();
         }
+        comprobarColisionEnemigo();
+    }
+
+    function comprobarColisionEnemigo(){
+        
+        enemigos.forEach(val => {
+            
+        });
+        if (this.abajo > val.arriba && this.arriba < val.abajo && this.derecha > val.izquierda && this.izquierda - 10 < val.derecha){
+
+        }
+
     }
 
     //añade numero enemigos dependiendo del nivel actual
@@ -112,7 +124,34 @@ $(function() {
         return n;
     }
 
+    function moverEnemigos(){
+        enemigos.forEach(enemigo => {
+            let random = Math.floor(Math.random()*(4-1+1)+1);
+            switch (random) {
+                case 1:
+                    if (!enemigo.colisionaPorDerecha("terreno")){
+                        enemigo.moverDerecha();
+                    }
+                    break;
+                case 2:
+                    if (!enemigo.colisionaPorIzquierda("terreno")){
+                        enemigo.moverIzquierda();
+                    }
+                    break;
+                case 3:
+                    if (!enemigo.colisionaPorArriba("terreno")){
+                        enemigo.moverArriba();
+                    }
+                    break;
+                case 4:
+                    if (!enemigo.colisionaPorAbajo("terreno")){
+                        enemigo.moverAbajo();
+                    }
+                    break;
+            }
 
+        });
+    }
 
 });
 
