@@ -161,9 +161,7 @@ $(function() {
         $("#vida").animate({
             top: "20%",
             opacity: "0"
-        });
-        //$("#vida").fadeOut();
-        //$("#vida").css({"opacity": "1", "top": "50%"});
+        }, "slow");
     }
 
     function animacionGolpe(){
