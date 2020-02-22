@@ -44,3 +44,25 @@ html, body{
     left: 20px;
     top: 20px;
 }
+@font-face {
+    font-family: fuente_pixel;
+    src: url(Symtext.ttf);
+  }
+#alerta{
+    position: absolute;
+    top: 10%;
+    font-family: fuente_pixel;
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+}
+#vida{
+    display: none;
+    position: absolute;
+    top: 50%;
+    font-family: fuente_pixel;
+    width: 100%;
+    text-align: center;
+    font-size: 50px;
+    color: red;
+}

@@ -3,12 +3,16 @@ var ultimaDireccion = "";
 var estatico = false;
 var nivelActual = 8;
 var enemigos = [];
+var puntuacionActual = 0;
+var nVidas = 3;
+var colisionable = true;
+var muerto = false;
 
 $(function() {
 
     //intervalos
     setInterval(comprobarEstado,2000);
-    setInterval(moverEnemigos, 50)
+    setInterval(comprobarEnemigos, 50)
 
     //dialogo puntuaciones
     //$("#puntuaciones").dialog();
@@ -27,64 +31,68 @@ $(function() {
     });
 
     function ponerPersonajeEstatico() {
-        if (ultimaDireccion == "izquierda"){
-            $("#medico").attr("src", "img/personajes/estatico-izquierda.jpg");
+        if (!muerto){
+            if (ultimaDireccion == "izquierda"){
+                $("#medico").attr("src", "img/personajes/estatico-izquierda.jpg");
+            }
+            else if (ultimaDireccion == "derecha"){
+                $("#medico").attr("src", "img/personajes/estatico-derecha.png");
+            }
+            else if (ultimaDireccion == "arriba"){
+                $("#medico").attr("src", "img/personajes/estatico-detras.jpg");
+            }
+            else{
+                $("#medico").attr("src", "img/personajes/estatico-delante.jpg");
+            }
+            estatico = true;
         }
-        else if (ultimaDireccion == "derecha"){
-            $("#medico").attr("src", "img/personajes/estatico-derecha.png");
-        }
-        else if (ultimaDireccion == "arriba"){
-            $("#medico").attr("src", "img/personajes/estatico-detras.jpg");
-        }
-        else{
-            $("#medico").attr("src", "img/personajes/estatico-delante.jpg");
-        }
-        estatico = true;
     }
 
     //mover dependiendo de codigo tecla
     function mueve() {
-        if (keys[37]) {
-            if (!personaje.colisionaPorIzquierda("terreno")) {
-                if (ultimaDireccion != "izquierda" || (estatico)){
-                    $("#medico").attr("src", "img/personajes/correr-izquierda.gif");
-                    estatico = false;
+        if (!muerto){
+            if (keys[37]) {
+                if (!personaje.colisionaPorIzquierda("terreno")) {
+                    if (ultimaDireccion != "izquierda" || (estatico)){
+                        $("#medico").attr("src", "img/personajes/correr-izquierda.gif");
+                        estatico = false;
+                    }
+                    personaje.moverIzquierda();
+                    ultimaDireccion = "izquierda";
                 }
-                personaje.moverIzquierda();
-                ultimaDireccion = "izquierda";
             }
-        }
-        if (keys[38]) {
-            if (!personaje.colisionaPorArriba("terreno")) {
-                if (ultimaDireccion != "arriba" || (estatico)){
-                    $("#medico").attr("src", "img/personajes/correr-arriba.gif");
-                    estatico = false;
+            if (keys[38]) {
+                if (!personaje.colisionaPorArriba("terreno")) {
+                    if (ultimaDireccion != "arriba" || (estatico)){
+                        $("#medico").attr("src", "img/personajes/correr-arriba.gif");
+                        estatico = false;
+                    }
+                    personaje.moverArriba();
+                    ultimaDireccion = "arriba";
                 }
-                personaje.moverArriba();
-                ultimaDireccion = "arriba";
             }
-        }
-        if (keys[39]) {
-            if (!personaje.colisionaPorDerecha("terreno")) {
-                if (ultimaDireccion != "derecha" || (estatico)){
-                    $("#medico").attr("src", "img/personajes/correr-derecha.gif");
-                    estatico = false;
+            if (keys[39]) {
+                if (!personaje.colisionaPorDerecha("terreno")) {
+                    if (ultimaDireccion != "derecha" || (estatico)){
+                        $("#medico").attr("src", "img/personajes/correr-derecha.gif");
+                        estatico = false;
+                    }
+                    personaje.moverDerecha();
+                    ultimaDireccion = "derecha";
                 }
-                personaje.moverDerecha();
-                ultimaDireccion = "derecha";
             }
-        }
-        if (keys[40]) {
-            if (!personaje.colisionaPorAbajo("terreno")) {
-                if (ultimaDireccion != "abajo" || (estatico)){
-                    $("#medico").attr("src", "img/personajes/correr-abajo.gif");
-                    estatico = false;
+            if (keys[40]) {
+                if (!personaje.colisionaPorAbajo("terreno")) {
+                    if (ultimaDireccion != "abajo" || (estatico)){
+                        $("#medico").attr("src", "img/personajes/correr-abajo.gif");
+                        estatico = false;
+                    }
+                    personaje.moverAbajo();
+                    ultimaDireccion = "abajo";
                 }
-                personaje.moverAbajo();
-                ultimaDireccion = "abajo";
             }
+            setTimeout(mueve, 50);
         }
-        setTimeout(mueve, 50);
     }
 
     mueve();
@@ -95,27 +103,90 @@ $(function() {
             añadirEnemigos();
         }
         comprobarColisionEnemigo();
+        actualizarPuntuacion();
+    }
+
+    function comprobarEnemigos(){
+        moverEnemigos();
+        comprobarColisionEnemigo();
     }
 
     function comprobarColisionEnemigo(){
-        
-        enemigos.forEach(val => {
-            
-        });
-        if (this.abajo > val.arriba && this.arriba < val.abajo && this.derecha > val.izquierda && this.izquierda - 10 < val.derecha){
-
+        if (colisionable){
+            enemigos.forEach(val => {
+                if (personaje.abajo > val.arriba && personaje.arriba < val.abajo && personaje.derecha > val.izquierda && personaje.izquierda - 10 < val.derecha){
+                    quitarVida();
+                }
+            });
         }
-
     }
+
+    function quitarVida(){
+        nVidas -= 1;
+        if (nVidas == 0){
+            morir();
+        }
+        else{
+            personajeGolpeado();
+        }
+    }
+
+    function morir(){
+        if (ultimaDireccion == "izquierda"){
+            $("#medico").attr("src", "img/personajes/morir-izquierda.gif");
+        }
+        else{
+            $("#medico").attr("src", "img/personajes/morir-derecha.gif");
+        }
+        muerto = true;
+        setTimeout(function(){$("#medico").fadeOut("slow")}, 500);
+        $("#alerta").text("Has muerto! El juego se va a reiniciar");
+        setTimeout(function(){location.reload();}, 5000);
+    }
+
+    function personajeGolpeado(){
+        colisionable = false;
+        setTimeout(function(){
+            colisionable = true;
+            if (nVidas > 1){
+                $("#vida").css({"opacity": "1", "top": "50%", "display": "none"});
+            }
+        }, 3000);
+        animacionGolpe();
+        mostrarMsgVida();
+    }
+
+    function mostrarMsgVida() {
+        $("#vida").show();
+        $("#vida").animate({
+            top: "20%",
+            opacity: "0"
+        });
+        //$("#vida").fadeOut();
+        //$("#vida").css({"opacity": "1", "top": "50%"});
+    }
+
+    function animacionGolpe(){
+        if (!muerto){
+            for (let i = 0; i < 5; i++) {
+                $("#medico").fadeTo("fast", 0.01);
+                $("#medico").fadeTo("fast", 1);
+            }
+        }
+    }
+
 
     //añade numero enemigos dependiendo del nivel actual
     function añadirEnemigos() {
         if (nivelActual < 10){
             for (let i = 0; i < nivelActual*2; i++) {
-                //$('<img>', {src: 'img/personajes/virus.gif',class: 'enemigo'}).appendTo("#enemigos");
                 enemigos.push(new Personaje($('<img>', {src: 'img/personajes/virus.gif',class: 'enemigo'}).appendTo("#enemigos")));
             }
         }
+    }
+
+    function actualizarPuntuacion(){
+        document.title = "Puntuacion: "+puntuacionActual;
     }
 
     //devuelve el numero de enemigos que hay
@@ -149,10 +220,8 @@ $(function() {
                     }
                     break;
             }
-
         });
     }
-
 });
 
 //devuelve array con objetos terreno con cada capa que tenga que colisionar
