@@ -66,3 +66,19 @@ html, body{
     font-size: 50px;
     color: red;
 }
+#bala{
+    position: absolute;
+    display: none;
+    width: auto;
+    height: auto;
+}
+.jeringuilla-horizontal{
+    position: absolute;
+    width: 30px;
+    height: auto;
+}
+.jeringuilla-vertical{
+    position: absolute;
+    width: auto;
+    height: 30px;
+}

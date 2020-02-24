@@ -1,12 +1,13 @@
 var personaje;
 var ultimaDireccion = "";
 var estatico = false;
-var nivelActual = 8;
+var nivelActual = 1;
 var enemigos = [];
 var puntuacionActual = 0;
 var nVidas = 3;
 var colisionable = true;
 var muerto = false;
+var disparable = true;
 
 $(function() {
 
@@ -91,11 +92,61 @@ $(function() {
                     ultimaDireccion = "abajo";
                 }
             }
+
+            if (keys[32]){
+                if (disparable){
+                    disparar();
+                }
+            }
             setTimeout(mueve, 50);
         }
     }
 
     mueve();
+
+    function disparar() {
+        let img = $('<img id="jeringuilla">');
+        let left = personaje.izquierda+(personaje.anchura/3);
+        let top = personaje.arriba+(personaje.altura/3);
+        $("#bala").css({
+            "top": top,
+            "left": left,
+            "display": "block",
+            "opacity": "1"
+        });
+        $("#bala").empty();
+        if (ultimaDireccion == "arriba"){
+            img.attr("src", "img/jeringuillas/jeringuilla-arriba.png");
+            img.attr("class", "jeringuilla-vertical");
+            top -= 300;
+        }
+        else if(ultimaDireccion == "abajo"){
+            img.attr("src", "img/jeringuillas/jeringuilla-abajo.png");
+            img.attr("class", "jeringuilla-vertical");
+            top += 300;
+        }
+        else if(ultimaDireccion == "izquierda"){
+            img.attr("src", "img/jeringuillas/jeringuilla-izquierda.png");
+            img.attr("class", "jeringuilla-horizontal");
+            left -= 300;
+        }
+        else if(ultimaDireccion == "derecha"){
+            img.attr("src", "img/jeringuillas/jeringuilla-derecha.png");
+            img.attr("class", "jeringuilla-horizontal");
+            left += 300;
+        }
+        $("#bala").append(img);
+        disparable = false;
+
+        $("#bala").animate({
+            left: left,
+            top: top+"px",
+            opacity: "0"
+        }, "slow");
+
+        setTimeout(function(){disparable = true}, 10);
+
+    }
 
     function comprobarEstado() {
         if (numeroEnemigos() == 0){
