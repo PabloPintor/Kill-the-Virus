@@ -251,8 +251,13 @@ $(function() {
     function añadirEnemigos() {
         enemigos = [];
         if (nivelActual < 10){
+            let top = 0;
+            let capa;
             for (let i = 0; i < nivelActual*2; i++) {
-                enemigos.push(new Personaje($('<img>', {src: 'img/personajes/virus.gif',class: 'enemigo'}).appendTo("#enemigos")));
+                top = ((i/(nivelActual*2))*90)+10;
+                capa = $('<img>', {src: 'img/personajes/virus.gif',class: 'enemigo'}).appendTo("#enemigos");
+                capa.css({"top": top+"%", "left": "60%"});
+                enemigos.push(new Personaje(capa));
                 numeroEnemigos++;
             }
         }
