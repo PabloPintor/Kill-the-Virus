@@ -4,10 +4,12 @@ var estatico = false;
 var nivelActual = 1;
 var enemigos = [];
 var puntuacionActual = 0;
-var nVidas = 3;
+var nVidas = 4;
 var colisionable = true;
 var muerto = false;
 var disparable = true;
+var numeroEnemigos = 0;
+var balaGolpea = false;
 
 $(function() {
 
@@ -52,7 +54,7 @@ $(function() {
     //mover dependiendo de codigo tecla
     function mueve() {
         if (!muerto){
-            if (keys[37]) {
+            if (keys[37] || keys[65]) {
                 if (!personaje.colisionaPorIzquierda("terreno")) {
                     if (ultimaDireccion != "izquierda" || (estatico)){
                         $("#medico").attr("src", "img/personajes/correr-izquierda.gif");
@@ -62,7 +64,7 @@ $(function() {
                     ultimaDireccion = "izquierda";
                 }
             }
-            if (keys[38]) {
+            if (keys[38] || keys[87]) {
                 if (!personaje.colisionaPorArriba("terreno")) {
                     if (ultimaDireccion != "arriba" || (estatico)){
                         $("#medico").attr("src", "img/personajes/correr-arriba.gif");
@@ -72,7 +74,7 @@ $(function() {
                     ultimaDireccion = "arriba";
                 }
             }
-            if (keys[39]) {
+            if (keys[39] || keys[68]) {
                 if (!personaje.colisionaPorDerecha("terreno")) {
                     if (ultimaDireccion != "derecha" || (estatico)){
                         $("#medico").attr("src", "img/personajes/correr-derecha.gif");
@@ -82,7 +84,7 @@ $(function() {
                     ultimaDireccion = "derecha";
                 }
             }
-            if (keys[40]) {
+            if (keys[40] || keys[83]) {
                 if (!personaje.colisionaPorAbajo("terreno")) {
                     if (ultimaDireccion != "abajo" || (estatico)){
                         $("#medico").attr("src", "img/personajes/correr-abajo.gif");
@@ -104,6 +106,12 @@ $(function() {
 
     mueve();
 
+    //intervalo probar disparos
+    //setInterval(disparar, 1000);
+
+    //intervalo probar numero enemigos
+    //setInterval(function(){console.log(numeroEnemigos)}, 1000)
+
     function disparar() {
         let img = $('<img id="jeringuilla">');
         let left = personaje.izquierda+(personaje.anchura/3);
@@ -114,7 +122,6 @@ $(function() {
             "display": "block",
             "opacity": "1"
         });
-        $("#bala").empty();
         if (ultimaDireccion == "arriba"){
             img.attr("src", "img/jeringuillas/jeringuilla-arriba.png");
             img.attr("class", "jeringuilla-vertical");
@@ -144,12 +151,12 @@ $(function() {
             opacity: "0"
         }, "slow");
 
-        setTimeout(function(){disparable = true}, 10);
-
+        setTimeout(function(){disparable = true}, 500);
+        setTimeout(function(){$("#bala").empty();}, 500);
     }
 
     function comprobarEstado() {
-        if (numeroEnemigos() == 0){
+        if (numeroEnemigos == 0){
             nivelActual++;
             añadirEnemigos();
         }
@@ -160,6 +167,7 @@ $(function() {
     function comprobarEnemigos(){
         moverEnemigos();
         comprobarColisionEnemigo();
+        comprobarColisionBala();
     }
 
     function comprobarColisionEnemigo(){
@@ -167,6 +175,21 @@ $(function() {
             enemigos.forEach(val => {
                 if (personaje.abajo > val.arriba && personaje.arriba < val.abajo && personaje.derecha > val.izquierda && personaje.izquierda - 10 < val.derecha){
                     quitarVida();
+                }
+            });
+        }
+    }
+
+    function comprobarColisionBala(){
+        let bala = $("#jeringuilla");
+        if (bala.length == 1){
+            enemigos.forEach(val => {
+                if (!balaGolpea && bala.offset().top + bala.outerHeight(true) > val.arriba && bala.offset().top < val.abajo && bala.offset().left + bala.outerWidth(true) > val.izquierda && bala.offset().left - 10 < val.derecha){
+                    balaGolpea = true;
+                    numeroEnemigos--;
+                    val.capa.fadeOut("slow").remove();
+                    enemigos.splice(enemigos.indexOf(val), 1);
+                    setTimeout(function(){balaGolpea = false;}, 500);
                 }
             });
         }
@@ -224,24 +247,19 @@ $(function() {
         }
     }
 
-
     //añade numero enemigos dependiendo del nivel actual
     function añadirEnemigos() {
+        enemigos = [];
         if (nivelActual < 10){
             for (let i = 0; i < nivelActual*2; i++) {
                 enemigos.push(new Personaje($('<img>', {src: 'img/personajes/virus.gif',class: 'enemigo'}).appendTo("#enemigos")));
+                numeroEnemigos++;
             }
         }
     }
 
     function actualizarPuntuacion(){
         document.title = "Puntuacion: "+puntuacionActual;
-    }
-
-    //devuelve el numero de enemigos que hay
-    function numeroEnemigos(){
-        let n = $('.enemigo').length;
-        return n;
     }
 
     function moverEnemigos(){
