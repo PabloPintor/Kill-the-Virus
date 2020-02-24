@@ -23,8 +23,9 @@
     <div class="container-fluid">
 
         <!--Puntuaciones-->
-        <div id="puntuaciones" title="PUNTUACIONES">
-            <p></p>
+        <div id="puntuaciones" title="RESULTADO">
+            <p id="parrafoPuntuaciones"></p>
+            <button id="btnReiniciar">Reintentar!</button>
         </div>
 
         <div id="alerta"></div>
@@ -35,9 +36,6 @@
         <div class="row">
             <div id="menu"></div>
         </div>
-
-        <!--Medico-->
-        <img id="medico" src="img/personajes/estatico-delante.jpg">
 
         <!--Paredes horizontales-->
         <div class="row">
@@ -54,7 +52,17 @@
         <div class="pared pilar" style="left: 80%; top: 33%;"></div>
         <div class="pared pilar" style="left: 80%; top: 66%;"></div>
 
+        <div id="areaSpawn"></div>
+
+        <!--Medico-->
+        <img id="medico" src="img/personajes/estatico-delante.jpg">
+
         <div id="enemigos"></div>
+        <div id="corazones" class="pared">
+            <img src="img/personajes/corazon.png" class="corazon">
+            <img src="img/personajes/corazon.png" class="corazon">
+            <img src="img/personajes/corazon.png" class="corazon">
+        </div>
 
     </div>
 

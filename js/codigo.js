@@ -15,10 +15,9 @@ $(function() {
 
     //intervalos
     setInterval(comprobarEstado,2000);
-    setInterval(comprobarEnemigos, 50)
+    setInterval(comprobarEnemigos, 50);
 
-    //dialogo puntuaciones
-    //$("#puntuaciones").dialog();
+    $("#btnReiniciar").click(function(){location.reload();});
 
     personaje = new Personaje($('#medico'));
 
@@ -161,13 +160,17 @@ $(function() {
             añadirEnemigos();
         }
         comprobarColisionEnemigo();
-        actualizarPuntuacion();
     }
 
     function comprobarEnemigos(){
         moverEnemigos();
         comprobarColisionEnemigo();
         comprobarColisionBala();
+        actualizarPuntuacion();
+    }
+
+    function actualizarCorazones() {
+        $("#corazones > img:nth-child(1)").remove();
     }
 
     function comprobarColisionEnemigo(){
@@ -175,6 +178,8 @@ $(function() {
             enemigos.forEach(val => {
                 if (personaje.abajo > val.arriba && personaje.arriba < val.abajo && personaje.derecha > val.izquierda && personaje.izquierda - 10 < val.derecha){
                     quitarVida();
+                    puntuacionActual -= 10;
+                    actualizarCorazones();
                 }
             });
         }
@@ -187,6 +192,7 @@ $(function() {
                 if (!balaGolpea && bala.offset().top + bala.outerHeight(true) > val.arriba && bala.offset().top < val.abajo && bala.offset().left + bala.outerWidth(true) > val.izquierda && bala.offset().left - 10 < val.derecha){
                     balaGolpea = true;
                     numeroEnemigos--;
+                    puntuacionActual += 25;
                     val.capa.fadeOut("slow").remove();
                     enemigos.splice(enemigos.indexOf(val), 1);
                     setTimeout(function(){balaGolpea = false;}, 500);
@@ -199,10 +205,18 @@ $(function() {
         nVidas -= 1;
         if (nVidas == 0){
             morir();
+            mostrarDialogoFinal();
         }
         else{
             personajeGolpeado();
         }
+    }
+
+    function mostrarDialogoFinal() {
+        let texto = "<p>Has obtenido: "+puntuacionActual+" puntos! La proxima vez sera!</p>";
+        $("#parrafoPuntuaciones").append(texto);
+        $("#btnReiniciar").button();
+        $("#puntuaciones").dialog();
     }
 
     function morir(){
@@ -214,8 +228,7 @@ $(function() {
         }
         muerto = true;
         setTimeout(function(){$("#medico").fadeOut("slow")}, 500);
-        $("#alerta").text("Has muerto! El juego se va a reiniciar");
-        setTimeout(function(){location.reload();}, 5000);
+        $("#alerta").text("Has muerto!");
     }
 
     function personajeGolpeado(){
@@ -249,14 +262,15 @@ $(function() {
 
     //añade numero enemigos dependiendo del nivel actual
     function añadirEnemigos() {
+        //añadir contador aqui
         enemigos = [];
         if (nivelActual < 10){
             let top = 0;
             let capa;
             for (let i = 0; i < nivelActual*2; i++) {
                 top = ((i/(nivelActual*2))*90)+10;
-                capa = $('<img>', {src: 'img/personajes/virus.gif',class: 'enemigo'}).appendTo("#enemigos");
-                capa.css({"top": top+"%", "left": "60%"});
+                capa = $('<img>', {src: 'img/personajes/virus_2.png',class: 'enemigo'}).appendTo("#enemigos");
+                capa.css({"top": top+"%", "left": "62.5%"});
                 enemigos.push(new Personaje(capa));
                 numeroEnemigos++;
             }
