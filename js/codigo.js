@@ -10,6 +10,9 @@ var muerto = false;
 var disparable = true;
 var numeroEnemigos = 0;
 var balaGolpea = false;
+var nivelMax = 10;
+var juegoAcabado = false;
+var vidasBoss = 10;
 
 $(function() {
 
@@ -163,10 +166,12 @@ $(function() {
     }
 
     function comprobarEnemigos(){
-        moverEnemigos();
-        comprobarColisionEnemigo();
-        comprobarColisionBala();
-        actualizarPuntuacion();
+        if (!juegoAcabado){
+            moverEnemigos();
+            comprobarColisionEnemigo();
+            comprobarColisionBala();
+            actualizarPuntuacion();
+        }
     }
 
     function actualizarCorazones() {
@@ -191,10 +196,16 @@ $(function() {
             enemigos.forEach(val => {
                 if (!balaGolpea && bala.offset().top + bala.outerHeight(true) > val.arriba && bala.offset().top < val.abajo && bala.offset().left + bala.outerWidth(true) > val.izquierda && bala.offset().left - 10 < val.derecha){
                     balaGolpea = true;
-                    numeroEnemigos--;
-                    puntuacionActual += 25;
-                    val.capa.fadeOut("slow").remove();
-                    enemigos.splice(enemigos.indexOf(val), 1);
+                    if (nivelActual == nivelMax && vidasBoss > 0){
+                        vidasBoss--;
+                        $("#bossBar").progressbar({value: vidasBoss*10});
+                    }
+                    else{
+                        numeroEnemigos--;
+                        puntuacionActual += 25;
+                        val.capa.fadeOut("slow").remove();
+                        enemigos.splice(enemigos.indexOf(val), 1);
+                    }
                     setTimeout(function(){balaGolpea = false;}, 500);
                 }
             });
@@ -227,7 +238,9 @@ $(function() {
             $("#medico").attr("src", "img/personajes/morir-derecha.gif");
         }
         muerto = true;
-        setTimeout(function(){$("#medico").fadeOut("slow")}, 500);
+        setTimeout(function(){$("#medico").fadeOut("slow").remove()}, 500);
+        personaje = "";
+
         $("#alerta").text("Has muerto!");
     }
 
@@ -264,7 +277,7 @@ $(function() {
     function añadirEnemigos() {
         //añadir contador aqui
         enemigos = [];
-        if (nivelActual < 10){
+        if (nivelActual < nivelMax){
             let top = 0;
             let capa;
             for (let i = 0; i < nivelActual*2; i++) {
@@ -274,6 +287,30 @@ $(function() {
                 enemigos.push(new Personaje(capa));
                 numeroEnemigos++;
             }
+        }
+        else if(nivelActual == nivelMax){
+            let boss = $('<img>', {src: 'img/personajes/virus_2.png',class: 'enemigo'}).appendTo("#enemigos");
+            boss.css({"top": "30%", "left": "30%", "width": "200px", "height": "200px"});
+            enemigos.push(new Personaje(boss));
+            numeroEnemigos++;
+            bossBar();
+        }
+        else if(nivelActual > nivelMax){
+            final();
+        }
+    }
+
+    function bossBar(){
+        $("#bossBar").progressbar({value: 100});
+    }
+
+    function final(){
+        if (!juegoAcabado){
+            juegoAcabado = true;
+            let texto = "<p>Has obtenido: "+puntuacionActual+" puntos! Enhorabuena!</p>";
+            $("#parrafoPuntuaciones").append(texto);
+            $("#btnReiniciar").button();
+            $("#puntuaciones").dialog();
         }
     }
 
