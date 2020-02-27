@@ -104,10 +104,24 @@ html, body{
     height: auto;
 }
 #bossBar{
+    font-family: fuente_pixel;
+    position: absolute;
+    left: 30%;
+    right: 30%;
+    top: 15px;
+}
+#contBossBar{
+    font-family: fuente_pixel;
     position: absolute;
     left: 30%;
     right: 30%;
 }
 #bossBar div{
     background-color: #de5656;
+}
+#bossBar > div > div{
+    position: absolute;
+    left: 35%;
+    background-color: white;
+    opacity: 0.8;
 }

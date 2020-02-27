@@ -302,6 +302,8 @@ $(function() {
 
     function bossBar(){
         $("#bossBar").progressbar({value: 100});
+        $("#bossBar").css("class", "mt-3");
+        $("#bossBar > div").append($("<div>").text("CORONAVIRUS").css("class", "progress-label"));
     }
 
     function final(){
