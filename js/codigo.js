@@ -10,7 +10,7 @@ var muerto = false;
 var disparable = true;
 var numeroEnemigos = 0;
 var balaGolpea = false;
-var nivelMax = 10;
+var nivelMax = 6;
 var juegoAcabado = false;
 var vidasBoss = 10;
 
